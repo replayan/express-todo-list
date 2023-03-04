@@ -1,11 +1,14 @@
 const bodyParser = require("body-parser");
 const express = require("express");
+const mongoose = require("mongoose");
 const date = require(__dirname + "/date.js");
-// console.log(date());
 const app = express();
 
-let items = ["Buy Food", "Cook Food", "Eat Food"];
-let workItems = [];
+// let items = ["Buy Food", "Cook Food", "Eat Food"];
+// let workItems = [];
+
+mongoose.set("strictQuery", true);
+mongoose.connect("mongodb://127.0.0.1:27017/testDB");
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
