@@ -2,12 +2,17 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const mongoose = require("mongoose");
 const date = require(__dirname + "/date.js");
+
 const app = express();
+
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
+
 mongoose.set("strictQuery", true);
 mongoose.connect("mongodb://127.0.0.1:27017/testDB");
+
+const items = [];
 
 const itemSchema = new mongoose.Schema({
   name: String,
@@ -36,17 +41,8 @@ const listSchema = new mongoose.Schema({
 
 const List = mongoose.model("List", listSchema);
 
-// Item.insertMany(defaultItems)
-//   .then(function () {
-//     console.log("Successfully saved defult items to DB");
-//   })
-//   .catch(function (err) {
-//     console.log(err);
-//   });
-
 app.get("/", (req, res) => {
   let day = date.getDate();
-  // res.render("list", { listTitle: day, newListItems: items });
 
   Item.find({})
     .then((foundItem) => {
@@ -86,8 +82,6 @@ app.get("/:customListName", (req, res) => {
     .catch((err) => {
       console.log(err);
     });
-
-  // res.render("list", { listTitle: customListName, newListItems: items });
 });
 
 app.post("/", (req, res) => {
@@ -98,11 +92,33 @@ app.post("/", (req, res) => {
   });
 
   if (listName === date.getDate()) {
-    item.save();
-    res.redirect("/");
+    item
+      .save()
+      .then(() => {
+        console.log("Successfully added item to list");
+        // res.redirect("/");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   } else {
     List.findOne({})
-      .then((foundList) => {})
+      .then((foundList) => {
+        if (foundList) {
+          foundList.items.push(item);
+          return foundList.save();
+        } else {
+          const list = new List({
+            name: listName,
+            items: [item],
+          });
+          return list.save();
+        }
+      })
+      .then(() => {
+        console.log("Successfully added item to list");
+        res.redirect("/");
+      })
       .catch((err) => {
         console.log(err);
       });
