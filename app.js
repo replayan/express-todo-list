@@ -29,6 +29,13 @@ const item3 = new Item({
 
 const defaultItems = [item1, item2, item3];
 
+const listSchema = new mongoose.Schema({
+  name: String,
+  items: [itemSchema],
+});
+
+const List = mongoose.model("List", listSchema);
+
 // Item.insertMany(defaultItems)
 //   .then(function () {
 //     console.log("Successfully saved defult items to DB");
@@ -57,17 +64,40 @@ app.get("/", (req, res) => {
     });
 });
 
+app.get("/:customListName", (req, res) => {
+  const customListName = req.params.customListName;
+
+  List.findOne({})
+    .then((foundList) => {
+      if (!foundList) {
+        const list = new List({
+          name: customListName,
+          items: defaultItems,
+        });
+        list.save();
+        res.redirect("/" + customListName);
+      } else {
+        res.render("list", {
+          listTitle: foundList.name,
+          newListItems: foundList.items,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  // res.render("list", { listTitle: customListName, newListItems: items });
+});
+
 app.post("/", (req, res) => {
   const itemName = req.body.newItem;
-  // const item to be added to the DB
   const item = new Item({
     name: itemName,
   });
   item.save();
-
   res.redirect("/");
 
-  // to be added to the DB
   if (req.body.list === "Work") {
     workItems.push(item);
     res.redirect("/work");
@@ -77,8 +107,16 @@ app.post("/", (req, res) => {
   }
 });
 
-app.get("/work", (req, res) => {
-  res.render("list", { listTitle: "Work List", newListItems: workItems });
+app.post("/delete", (req, res) => {
+  const checkedItemId = req.body.checkbox;
+  Item.findByIdAndRemove(checkedItemId)
+    .then(() => {
+      console.log("Successfully deleted checked item");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  res.redirect("/");
 });
 
 const port = 3000;
