@@ -101,11 +101,11 @@ app.post("/", (req, res) => {
     item.save();
     res.redirect("/");
   } else {
-    List.findOne({ name: listName }, (err, foundList) => {
-      foundList.items.push(item);
-      foundList.save();
-      res.redirect("/" + listName);
-    });
+    List.findOne({})
+      .then((foundList) => {})
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   if (req.body.list === "Work") {
