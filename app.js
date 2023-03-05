@@ -58,8 +58,14 @@ app.get("/", (req, res) => {
 });
 
 app.post("/", (req, res) => {
-  const item = req.body.newItem;
+  const itemName = req.body.newItem;
   // const item to be added to the DB
+  const item = new Item({
+    name: itemName,
+  });
+  item.save();
+
+  res.redirect("/");
 
   // to be added to the DB
   if (req.body.list === "Work") {
