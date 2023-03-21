@@ -36,13 +36,9 @@ To use this app, you must have the following installed on your system:
 2. Update a task by clicking the Edit button and typing the new task in the input field.
 3. Delete a task by clicking the Delete button.
 
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
-
 ## Author
 
-[replayan]
+replayan
 
 ## Contributing
 
