@@ -1,8 +1,12 @@
-<%- include('header') -%>
+<%- include("header") -%>
+
+<!-- Render the list title in a heading -->
 <div class="box" id="heading">
   <h1><%= listTitle %></h1>
 </div>
+
 <div class="box">
+  <!-- Loop through the items in the list and display each one with a checkbox -->
   <% newListItems.forEach(function(item){ %>
   <form action="/delete" method="post">
     <div class="item">
@@ -10,13 +14,15 @@
         type="checkbox"
         name="checkbox"
         value="<%= item._id %>"
-        onchange="this.form.submit()"
+        onChange="this.form.submit()"
       />
       <p><%= item.name %></p>
     </div>
+    <input type="hidden" name="list" value="<%= listTitle %>" />
   </form>
-  <%}); %>
+  <% }) %>
 
+  <!-- Add a form for users to enter a new item -->
   <form class="item" action="/" method="post">
     <input
       type="text"
@@ -24,7 +30,9 @@
       placeholder="New Item"
       autocomplete="off"
     />
-    <button type="submit" name="list" value="<%=listTitle%>">+</button>
+    <input type="hidden" name="list" value="<%= listTitle %>" />
+    <button type="submit">+</button>
   </form>
 </div>
-<%- include('footer') -%>
+
+<%- include("footer") -%>
