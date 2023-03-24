@@ -38,7 +38,7 @@ To use this app, you must have the following installed on your system:
 
 ## Author
 
-replayan
+[replayan](https://github.com/replayan)
 
 ## Contributing
 
