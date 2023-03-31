@@ -7,6 +7,8 @@ This is a simple ToDo List app built using Node.js and Express framework with Mo
 To use this app, you must have the following installed on your system:
 
 - Node.js
+- Express
+- EJS
 - MongoDB
 
 ## Installation
